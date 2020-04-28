@@ -3,46 +3,51 @@
 class News extends CI_Controller {
     public function __construct() {
         parent::__construct();
+        $this->load->helper('url');
         $this->load->library('session');
-        $this->load->model('news_model');
-        $this->load->helper('url_helper');
     }
     public function index() {
+        $this->load->library('template');
+        $this->load->model('news_model');
         $data['news'] = $this->news_model->get_news();
-
-        //on charge le fragment de la page propre à la méthode avant de l'intégrer au layout
-        $layout['content'] = $this->load->view('news/index', $data, true);
-        $this->load->view('layouts/template', $layout);
+        $this->template->view('layouts/template', 'news/index', $data);
     }
 
     public function show($id = null) {
-        $data = $this->news_model->get_news($id);
+        $this->load->model('news_model');
+        $this->load->library('template');
+        $data['news_item'] = $this->news_model->get_news($id);
 
         if (empty($data)) {
             show_404();
         }
-        $layout['content'] = $this->load->view('news/show', ['news_item' => $data], true); 
-        $this->load->view('layouts/template', $layout);  
+        $this->template->view('layouts/template', 'news/show', $data);
     }
 
     public function edit($id = null) {
+        $this->load->model('news_model');
+        $this->load->library('template');
         $this->load->helper('form');
-        $data = $this->news_model->get_news($id);
+        $data['news_item'] = $this->news_model->get_news($id);
 
         if (empty($data)) {
             show_404();
         }
-        $layout['content'] = $this->load->view('news/edit', ['news_item' => $data], true);
-        $this->load->view('layouts/template', $layout); 
+        $data['action'] = "news/update";
+        $data['page_title'] = "Edition article";
+        $this->template->view('layouts/template', 'news/form', $data);
     }
 
     public function create() {
+        $this->load->library('template');
         $this->load->helper('form');
-        $layout['content'] = $this->load->view('news/create', null, true);
-        $this->load->view('layouts/template', $layout);  
+        $data['action'] = "news/store";
+        $data['page_title'] = "Création article";
+        $this->template->view('layouts/template', 'news/form', $data);
     }
 
     public function store() {
+        $this->load->model('news_model');
         $this->load->helper('form');
         $this->load->library('form_validation');
 
@@ -62,11 +67,12 @@ class News extends CI_Controller {
         }
     }
 
-    public function update($id = null)
-    {
+    public function update() {
+        $id = $this->input->post('id');
         if ($id === null) {
             show_404();
         }
+        $this->load->model('news_model');
         $this->load->helper('form');
         $this->load->library('form_validation');
 
@@ -89,6 +95,7 @@ class News extends CI_Controller {
         if($id === NULL) {
             show_404();
         } else {
+            $this->load->model('news_model');
             $this->news_model->delete_news_item($id);
             $this->session->set_flashdata([
                 'success' => 'Votre article a été supprimé avec succès'

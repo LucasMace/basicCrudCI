@@ -1,4 +1,4 @@
-<table id="news_table">
+<table class="table">
     <thead>
         <th>ID</th>
         <th>Titre</th>

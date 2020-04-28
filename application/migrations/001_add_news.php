@@ -22,7 +22,8 @@ class Migration_Add_news extends CI_Migration {
                                 'null' => false,
                         ],
                         'text' => [
-
+                                'type' => 'TEXT',
+                                'null' => false,
                         ]
                 ]);
                 $this->dbforge->add_key('id', TRUE);

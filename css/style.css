@@ -28,11 +28,6 @@ nav ul li a{
     color: #0c2461
 }
 
-main{
-    width: min-content;
-    margin-left: auto;
-    margin-right: auto;
-}
 #news_table .title {
     white-space: nowrap;
 
