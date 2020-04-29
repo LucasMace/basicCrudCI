@@ -4,6 +4,7 @@ class Login extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
+        $this->load->library('form_validation');
 
         if($this->session->is_logged) {
             $this->session->set_flashdata([
@@ -30,7 +31,7 @@ class Login extends CI_Controller {
             $this->session->set_flashdata([
                 'error' => validation_errors(),
             ]);
-            redirect('login/');
+            $this->index();
         } else {
             // redirige à la page d'accueil avec message de réussite
             $username = $this->input->post('username');

@@ -45,7 +45,7 @@ class Register extends CI_Controller {
             $username = $this->input->post('username');
             $password = password_hash($this->input->post('password'), PASSWORD_BCRYPT);
 
-            $user = $this->users_model->insert_user($username, $password);
+            $this->users_model->insert_user($username, $password);
 
             $this->session->set_flashdata([
                 'success' => 'Vous êtes enregistré',

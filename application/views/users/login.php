@@ -5,7 +5,7 @@
     <form action="<?php echo site_url('login/validation') ?>" method="post">
         <div class="form-group">
             <label for="username">Nom d'utilisateur</label>
-            <input type="text" name="username" id="username">
+            <input type="text" name="username" id="username" value="<?php echo set_value('username'); ?>">
         </div>
         <div class="form-group">
             <label for="password">Mot de passe :</label>
