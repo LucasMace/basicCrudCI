@@ -17,7 +17,10 @@ class News extends CI_Controller {
         $data['news_item'] = $this->news_model->get_news($id);
 
         if (empty($data)) {
-            show_404();
+            $this->session->set_flashdata([
+                'error' => "Cet article n'existe pas"
+            ]);
+            redirect('/');
         }
         $this->template->view('layouts/template', 'news/show', $data);
     }
@@ -116,7 +119,7 @@ class News extends CI_Controller {
         $this->load->library('middleware', [
             'group' => 'writer'
         ]);
-        
+
         if($id === NULL) {
             show_404();
         } else {
