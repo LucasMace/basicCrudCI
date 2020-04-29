@@ -10,7 +10,7 @@
                 <td><?php echo $news_item['id'] ?></td>
                 <td class="title">
                     <a href="news/show/<?php echo $news_item['id'] ?>">
-                        <?php echo $news_item['title'] ?>
+                        <?php echo htmlspecialchars($news_item['title']) ?>
                     </a>
                 </td>
                 <td class="action">

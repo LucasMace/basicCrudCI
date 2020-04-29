@@ -1,7 +1,7 @@
 <article>
-    <h2><?php echo $news_item['title'] ?></h2>
+    <h2><?php echo htmlspecialchars($news_item['title']) ?></h2>
 
-    <p><?php echo $news_item['text'] ?> </p>
+    <p><?php echo htmlspecialchars($news_item['text']) ?> </p>
 
     <div class="action">
         <a href="../edit/<?php echo $news_item['id'] ?>"> Edit</a>

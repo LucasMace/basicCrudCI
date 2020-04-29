@@ -1,0 +1,5 @@
+{
+    "scripts": {
+        "sass:compile": "node-sass --include-path sass asset/scss/style.scss asset/css/style.css"
+    }
+}

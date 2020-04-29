@@ -23,29 +23,15 @@ class News_model extends CI_Model {
      * 
      * utilise les informations des input post pour la modif
      */
-    public function update_news_item($id) {
-        $data = [
-            'title' => $this->input->post('title'),
-            'text' => $this->input->post('text'),
-        ];
+    public function update_news_item($id, $data) {
         $this->db->where('id', $id);
         return $this->db->update('news', $data);
     }
 
     /**
-     * Insertion d'un article à partir des info POST
+     * Insertion d'un article
      */
-    public function set_news() {
-        $this->load->helper('url');
-
-        $slug = url_title($this->input->post('title'), 'dash', TRUE);
-
-        $data = [
-            'title' => $this->input->post('title'),
-            'slug' => $slug,
-            'text' => $this->input->post('text'),
-        ];
-
+    public function insert_news_article($data) {
         return $this->db->insert('news', $data);
     }
     /**

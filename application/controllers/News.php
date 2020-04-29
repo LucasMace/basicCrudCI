@@ -3,8 +3,6 @@
 class News extends CI_Controller {
     public function __construct() {
         parent::__construct();
-        $this->load->helper('url');
-        $this->load->library('session');
     }
     public function index() {
         $this->load->library('template');
@@ -25,9 +23,12 @@ class News extends CI_Controller {
     }
 
     public function edit($id = null) {
+        $this->load->library('middleware', [
+            'group' => 'writer'
+        ]);
         $this->load->model('news_model');
         $this->load->library('template');
-        $this->load->helper('form');
+        
         $data['news_item'] = $this->news_model->get_news($id);
 
         if (empty($data)) {
@@ -39,8 +40,11 @@ class News extends CI_Controller {
     }
 
     public function create() {
+        $this->load->library('middleware', [
+            'group' => 'writer'
+        ]);
+
         $this->load->library('template');
-        $this->load->helper('form');
         $data['action'] = "news/store";
         $data['page_title'] = "Création article";
         $this->template->view('layouts/template', 'news/form', $data);
@@ -48,18 +52,27 @@ class News extends CI_Controller {
 
     public function store() {
         $this->load->model('news_model');
-        $this->load->helper('form');
         $this->load->library('form_validation');
 
         $this->form_validation->set_rules('title', 'Titre', 'required');
         $this->form_validation->set_rules('text', 'Texte', 'required');
 
         if ($this->form_validation->run() === false) {
-            // Erreur à la validation
+            $this->session->set_flashdata([
+                'error' => validation_errors()
+            ]);
             redirect('news/create');
         } else {
             // redirige à la page d'accueil avec message de réussite
-            $this->news_model->set_news();
+            $slug = url_title($this->input->post('title'), 'dash', TRUE);
+
+            $data = [
+                'title' => $this->input->post('title'),
+                'slug' => $slug,
+                'text' => $this->input->post('text'),
+            ];
+
+            $this->news_model->insert_news_article($data);
             $this->session->set_flashdata([
                 'success' => 'Votre article a été créer avec succès'
             ]);
@@ -80,10 +93,17 @@ class News extends CI_Controller {
         $this->form_validation->set_rules('text', 'Texte', 'required');
 
         if ($this->form_validation->run() === false) {
-            //erreur à la valid
+            $this->session->set_flashdata([
+                'error' => validation_errors()
+            ]);
             redirect('/news/edit/' . $id);
         } else {
-            $this->news_model->update_news_item($id);
+            $data = [
+                'title' => $this->input->post('title'),
+                'text' => $this->input->post('text'),
+            ];
+
+            $this->news_model->update_news_item($id, $data);
             $this->session->set_flashdata([
                 'success' => 'Votre article a été modifié avec succès'
             ]);
@@ -92,6 +112,11 @@ class News extends CI_Controller {
     }
 
     public function delete($id = null) {
+        
+        $this->load->library('middleware', [
+            'group' => 'writer'
+        ]);
+        
         if($id === NULL) {
             show_404();
         } else {
